@@ -12,7 +12,7 @@ variable "instance_type" {
   default     = "t2.small"
 }
 
-variable "pub_key" {
+variable "key_name" {
   description = "the public key to be used to access the bastion host and ansible nodes"
   default     = "joestack"
 }
@@ -20,8 +20,4 @@ variable "pub_key" {
 variable "network_address_space" {
   description = "CIDR for this deployment"
   default     = "192.168.0.0/16"
-}
-
-variable "ami_id" {
-  default = "ami-0f29c8402f8cce65c"
 }

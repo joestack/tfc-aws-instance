@@ -109,7 +109,7 @@ resource "aws_instance" "bastionhost" {
   private_ip                  = cidrhost(aws_subnet.dmz_subnet.cidr_block, 10)
   associate_public_ip_address = "true"
   vpc_security_group_ids      = [aws_security_group.bastionhost.id]
-  key_name                    = var.pub_key
+  key_name                    = var.key_name
   
   tags = {
     Name        = "bh-instance"
