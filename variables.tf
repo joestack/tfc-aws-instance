@@ -7,22 +7,6 @@ variable "name" {
   description = "Unique name of the deployment"
 }
 
-variable "vault_public_url" {
-  description = "Vault Address"
-}
-
-variable "vault_username" {
-  description = "Username to checkout AWS Provider credentials from Vault"
-}
-
-variable "vault_password" {
-  description = "Password to checkout credentials"
-}
-
-variable "vault_namespace" {
-  default = "admin"
-}
-
 variable "instance_type" {
   description = "instance size to be used for worker nodes"
   default     = "t2.small"

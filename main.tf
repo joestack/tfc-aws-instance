@@ -7,25 +7,10 @@ terraform {
   }
 }
 
-provider "vault" {
-  address   = var.vault_public_url
-  auth_login_userpass {
-    username = var.vault_username
-    password = var.vault_password
-    namespace = var.vault_namespace
-  }
-}
-
-data "vault_aws_access_credentials" "creds" {
-  backend = "aws"
-  role    = "deploy"
-}
 
 provider "aws" {
     region = var.aws_region
-    access_key = data.vault_aws_access_credentials.creds.access_key
-    secret_key = data.vault_aws_access_credentials.creds.secret_key
-}
+ }
 
 # Network & Routing
 # VPC 
@@ -38,6 +23,22 @@ resource "aws_vpc" "hashicorp_vpc" {
     Name = "${var.name}-vpc"
   }
 }
+
+data "aws_ami" "ubuntu" {
+  most_recent = true
+  filter {
+    name = "name"
+    #values = ["ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*"]
+    #values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
+  }
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+  owners = ["099720109477"] # Canonical
+}
+
 
 # Internet Gateways and route table
 
@@ -102,7 +103,7 @@ resource "aws_security_group_rule" "jh-egress" {
 
 
 resource "aws_instance" "bastionhost" {
-  ami                         = var.ami_id #ami-0f29c8402f8cce65c
+  ami                         = data.aws_ami.ubuntu.id
   instance_type               = var.instance_type
   subnet_id                   = aws_subnet.dmz_subnet.id
   private_ip                  = cidrhost(aws_subnet.dmz_subnet.cidr_block, 10)
